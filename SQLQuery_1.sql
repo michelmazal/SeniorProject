@@ -15,12 +15,13 @@ if exists(select * from sys.tables where name = 'Recommendation')
 
 if exists(select * from sys.tables where name = 'Request')
 	Drop Table dbo.Request
+	
+f exists(select * from sys.tables where name = 'User')
+	Drop Table dbo.[User]
 
 if exists(select * from sys.tables where name = 'UserRoleMember')
 	Drop Table dbo.UserRoleMember
 
-if exists(select * from sys.tables where name = 'User')
-	Drop Table dbo.[User]
 
 
 /*Create Tables*/
