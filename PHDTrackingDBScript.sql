@@ -74,3 +74,4 @@ AllocatedDate datetime not null,
 FOREIGN KEY(AllocatedID) REFERENCES [USER](NetID),
 FOREIGN KEY(AllocatedToID) REFERENCES [USER](NetID),
 )
+

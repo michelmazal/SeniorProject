@@ -44,8 +44,8 @@
               <button class="nav-link active" onclick="Tabs('nav-home')" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Students Without Advisor</button>
               <button class="nav-link" onclick="Tabs('nav-profile')" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List Of Your Students</button>
               <button class="nav-link" onclick="Tabs('nav-contact')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Student Advisory Request</button>
-              <button class="nav-link" onclick="Tabs('nav-Recomended')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Recomended Student For TA</button>
-              <button class="nav-link" onclick="Tabs('nav-Recomend')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Recomended Student</button>
+              <button class="nav-link" onclick="Tabs('nav-recommended')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Recommended Students</button>
+              <button class="nav-link" onclick="Tabs('nav-recommend')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">recommended Student</button>
             
             </div>
           </nav>
@@ -106,7 +106,7 @@
                   </table>
             </div>
 
-            <div class="tab-pane fade" id="nav-Recomended" role="tabpanel" aria-labelledby="nav-contact-tab">
+            <div class="tab-pane fade" id="nav-recommended" role="tabpanel" aria-labelledby="nav-contact-tab">
                 <table class="table">
                     <thead class="thead-dark">
                       <tr>
@@ -114,7 +114,7 @@
                         <th scope="col">FullName</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Recomendation</th>
+                        <th scope="col">recommendation</th>
                        
                       </tr>
                     </thead>
@@ -125,7 +125,7 @@
                   </table>
             </div>
 
-            <div class="tab-pane fade" id="nav-Recomend" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="tab-pane fade" id="nav-recommend" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <form style="width: 50%;margin: 24px auto;">
                     <br>
                     <br>
@@ -136,7 +136,7 @@
                     </select>
                     <br>
                 
-                    <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="Recomendation">
+                    <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="recommendation">
 
                     </textarea>
                     <br>
@@ -164,7 +164,7 @@ var Id = localStorage.getItem('Id');
         }
      })
      function Tabs(Tab){
-         var base=['nav-home','nav-profile','nav-contact','nav-Recomended','nav-Recomend'];
+         var base=['nav-home','nav-profile','nav-contact','nav-recommended','nav-recommend'];
          var tab = document.getElementById(Tab);
          base.forEach(element => {
                if(element !== Tab){
@@ -246,10 +246,10 @@ function getYourStudentAdvisoryRequest(){
       })
 }
 
-function getRecomendedTa(){
+function getrecommendedTa(){
     $.ajax({
           type:"GET",
-          url:"/recomendation",
+          url:"/recommendation",
           cache:false,
           success:(data)=>{
             data.forEach((element,index) => {
@@ -288,33 +288,34 @@ function getStudents(){
 
 $('#Post').click(()=>{
    
-    PostRecomendation();
+    Postrecommendation();
    // refreshData();
 })
-function PostRecomendation(){
-   var text = $('#Recom').val();
+function Postrecommendation(){
+   var text = $('#Recom').val(); 
    var Select = $('#Select').val();
    
 
-   if(text !==" "){
-       if(Select !=="0"){
-           var data = "&Id="+Id+"&text="+text+"&User="+Select;
+   if(text.trim() !==""){
+       if(Select !=="Select Student"){
+           var data = "&Id="+Id+"&text="+text.trim()+"&User="+Select.trim();
            $.ajax({
           type:"GET",
            data:data,
-          url:"/recomend",
+          url:"/recommend",
           cache:false,
           success:(data)=>{
+            console.log(data);
               if(data == true){
-                  alert('Recomended succesfully');
+                  alert('recommended succesfully');
               }else{
-                  alert('Failed To Recomend');
+                  alert('Failed To recommend, ' + data);
               }
           }
       })
 
-       }else alert('Select student');
-   }else alert("provide Recomendation");
+       }else alert('Please Select a student');
+   }else alert("Please Provide Recommendation");
 }
 
 function AcceptStudent(id){
@@ -383,7 +384,7 @@ function Logout(){
 
 getStudentWithoutAdvisor();
 getYourStudents();
-getRecomendedTa();
+getrecommendedTa();
 getStudents();
 getYourStudentAdvisoryRequest();
 
