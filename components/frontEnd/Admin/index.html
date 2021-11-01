@@ -289,6 +289,7 @@ function getStudents(){
 $('#Post').click(()=>{
    
     PostRecomendation();
+   // refreshData();
 })
 function PostRecomendation(){
    var text = $('#Recom').val();
@@ -335,6 +336,8 @@ function AcceptStudent(id){
               }
           }
       })
+
+    //refreshData();
 }
 
 
@@ -376,9 +379,12 @@ function Logout(){
     localStorage.clear();
     window.location.href="/";
 }
+
+
 getStudentWithoutAdvisor();
 getYourStudents();
 getRecomendedTa();
 getStudents();
 getYourStudentAdvisoryRequest();
+
  </script>

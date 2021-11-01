@@ -9,9 +9,17 @@ const { request } = require('express');
 
 const Router = express.Router();
 const Paths="frontEnd";
+
+var currentRole = '';
+
 Router.get('/',(req,res)=>{
-  res.sendFile(path.join(__dirname,`${Paths}/index.html`));
-})
+  currentRole = '';
+  res.redirect('/Login');
+});
+
+Router.get('/Login',(req,res)=>{
+  res.sendFile(path.join(__dirname,`${Paths}/Login/index.html`));
+});
 
 Router.get('/adminLogin',(req,res)=>{
    const {email,password} = req.query;
@@ -33,12 +41,11 @@ Router.get('/adminLogin',(req,res)=>{
         if (err){
            console.log(err)
            //reject(err);
-           
-          
         }
 
         const check = recordset['rowsAffected'];
         if(check > 0){
+          currentRole = recordset['recordset'][0]['UserRole'];
        // recordset['recordset'][0]['UserRole'])
             res.json({res:true,role:recordset['recordset'][0]['UserRole'],data:recordset['recordset'][0]})
         }else{
@@ -52,11 +59,21 @@ Router.get('/adminLogin',(req,res)=>{
 })
 
 Router.get('/admin',(req,res)=>{
-   res.sendFile(path.join(__dirname,`${Paths}/Admin/index.html`))
+    if(currentRole !== 'admin'){  
+      res.json({res:'user does not have access'});
+    } else {
+      res.sendFile(path.join(__dirname,`${Paths}/Admin/index.html`))
+    }
+
 })
 
 Router.get('/student',(req,res)=>{
-  res.sendFile(path.join(__dirname,`${Paths}/student/index.html`));
+  if(currentRole !== 'student'){  
+    res.json({res:'user does not have access'});
+  } else {
+    res.sendFile(path.join(__dirname,`${Paths}/student/index.html`));
+  }
+
 })
 
 Router.get('/student/withoutAdvisor',(req,res)=>{
@@ -115,7 +132,7 @@ Router.get('/student/withoutAdvisor',(req,res)=>{
 
 
          if(datLength == 0){
-           console.log(datLength)
+           //console.log(datLength)
            res.json(data)
          }else{
            //console.log(newData)
@@ -388,27 +405,19 @@ Router.get('/Profs',(req,res)=>{
       return
     }
     var request = new sql.Request();
-    request.query(`SELECT * FROM [User] WHERE RoleID=1`,function (err, recordset) {
+    request.query(`exec dbo.getProfessors`,function (err, recordset) {
         
       if (err){
          console.log(err)
-         //reject(err);
-         
-        
       }
 
       const check = recordset['rowsAffected'];
       if(check > 0){
-     // recordset['recordset'][0]['UserRole'])
-
      var data = recordset['recordset'];
     res.json(data);
-          //res.json({res:true,role:recordset['recordset'][0]['UserRole']})
       }else{
         res.json([]);
       }
-
-
   });
   })
 })
