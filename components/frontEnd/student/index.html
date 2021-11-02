@@ -20,6 +20,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
   </script>
+  <script type="text/javascript" src="/components/frontEnd/Common/logic.js"></script>
 
   <title>Home</title>
 </head>
@@ -51,42 +52,26 @@
   </nav>
   <br>
   <div class="container">
-
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-
         <button class="nav-link active" onclick="Tabs('nav-home')" id="nav-home-tab" data-bs-toggle="tab"
-          data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Request Prof
+          data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Request
           Advisory</button>
-
+          <button class="nav-link" onclick="Tabs('nav-profile')" id="nav-profile-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+          Advisor Requests</button>
       </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <!-- <table class="table">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">FullName</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody id="sbody">
-                    
-                     
-                    </tbody>
-                  </table> -->
         <div id="professorTable"></div>
       </div>
+      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div id="yourRequests"></div>
+      </div>
     </div>
-
-
-
-
   </div>
-
+  <div class="loader" id="loader"></div>
 </body>
 
 </html>
@@ -105,7 +90,7 @@
   })
 
   function Tabs(Tab) {
-    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-Recomended', 'nav-Recomend'];
+    var base = ['nav-home','nav-profile'];
     var tab = document.getElementById(Tab);
     base.forEach(element => {
       if (element !== Tab) {
@@ -126,21 +111,8 @@
       cache: false,
       data: data,
       success: (data) => {
-        // data.forEach((element, index) => {
-
-        //   $('#sbody').append(`
-        //           <tr>
-        //                <th scope="row">${index +1}</th>
-        //                <td>${element.FullName}</td>
-        //                <td>${element.Phone}</td>
-        //                <td>${element.Email}</td>
-        //                <td><button onclick="Request(${element.NetID})" class="btn btn-primary">Request Advisory</button></td>
-        //              </tr>
-        //           `)
-        // });
-
         var table = new Tabulator("#professorTable", {
-          layout: "fitDataStretch",
+          layout: "fitDataFill",
           data: data,
           columns: [{
               formatter: "rownum",
@@ -160,11 +132,27 @@
               field: "Email"
             },
             {
-              formatter: button,
-              width: 40,
+              formatter: function (cell, formatterParams) {
+                console.log(cell.getRow().getData())
+                if (cell.getRow().getData().IsRequestDisabled === 1) {
+                  return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
+                    "ed</button>";
+                } else if(cell.getRow().getData().IsAdvisor === 1){
+                  return "<b>Your Advisor</b>";
+                }else 
+                  return "<button class='btn btn-primary'>" + formatterParams.buttonText + "</button>";
+                // return `<button class='btn btn-primary' onclick="await functionRouter('Request','` + cell.getRow().getData().NetID + `')">` + formatterParams.buttonText + "</button>";
+              },
+              formatterParams: {
+                buttonText: 'Request'
+              },
+              width: 150,
+              headerSort: false,
               hozAlign: "center",
-              cellClick: function (e, cell) {
-                Request(cell.getRow().getData().NetID);
+              cellClick: async function (e, cell) {
+                if (cell.getRow().getData().IsRequestDisabled === 1)
+                  return;
+                await functionRouter('Request', cell.getRow().getData().NetID);
               }
             },
           ],
@@ -173,15 +161,79 @@
     })
   }
 
-  var button = function(cell, formatterParams){ //plain text value
-    return "<button class='btn btn-primary'>Request Advisory</button>";
-};
-
-  function Request(id) {
-    var data = "id=" + id + "&Id=" + Id;
+  function getAdminAdvisoryRequest() {
+    var data = "Id=" + Id;
     $.ajax({
       type: "GET",
-      url: "/Request",
+      url: "/advisoryRequest/" + Id,
+      cache: false,
+      success: (data) => {
+        var table = new Tabulator("#yourRequests", {
+          layout: "fitDataFill",
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40
+            },
+            {
+              title: "Full Name",
+              field: "FullName"
+            },
+            {
+              title: "Phone Number",
+              field: "Phone"
+            },
+            {
+              title: "Email",
+              field: "Email"
+            },
+            {
+              title: "Request Date",
+              field: "DateRequested"
+            },
+            {
+              formatter: function (cell, formatterParams) {
+                return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
+              },
+              formatterParams: {
+                buttonText: 'Accept'
+              },
+              width: 150,
+              hozAlign: "center",
+              headerSort: false,
+              cellClick: async function (e, cell) {
+                await functionRouter('Accept', cell.getRow().getData().NetID);
+              }
+            },
+          ],
+        });
+      }
+    })
+  }
+  async function functionRouter(action, netID) {
+    showScroller()
+    switch (action) {
+      case 'Accept':
+        await AcceptAllocation(Id, netID);
+        break;
+      case 'Request':
+        await Request(netID);
+        break;
+      default:
+        console.log("Not Mapped Yet " + action)
+
+
+    }
+    await refreshData();
+    hideScroller()
+  }
+
+  function Request(id) {
+    var data = "admin=" + id + "&student=" + Id;
+    $.ajax({
+      type: "GET",
+      url: "/StudentRequest",
       cache: false,
       data: data,
       success: (data) => {
@@ -192,13 +244,20 @@
         }
       }
     })
-
+  }
+  function showScroller() {
+    $("#loader").show();
   }
 
-  function Logout() {
-    localStorage.clear();
-    window.location.href = "/";
+  function hideScroller() {
+    $("#loader").hide();
   }
 
-  getProfs()
+  function refreshData() {
+    getProfs()
+    getAdminAdvisoryRequest()
+  }
+
+  hideScroller()
+  refreshData() 
 </script>

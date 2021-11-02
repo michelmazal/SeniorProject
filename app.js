@@ -6,12 +6,13 @@ const http = require('http');
 //const con = require('./components/config/db');
 const Router = require('./components/router');
 const {origins} = require('./components/config/config');
+const path = require('path');
 
 const cors = require('cors');
 
 const Server = http.createServer(app);
 
-app.use(express.static(__dirname +'/public'));
+app.use(express.static(__dirname));
 
 var corOptions ={
     origin:function (origin,callback) {

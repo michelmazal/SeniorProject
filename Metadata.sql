@@ -23,6 +23,18 @@ values
 Insert into [User] 
 values 
 (
+'JKL123456',
+1,
+'Test',
+'User',
+'Test User',
+'214-123-1234',
+'JKL123456@utdallas.edu'
+)
+
+Insert into [User] 
+values 
+(
 'DEF123456',
 2,
 'Jane',

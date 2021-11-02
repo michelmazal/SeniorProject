@@ -87,13 +87,16 @@ Router.get('/student', (req, res) => {
 })
 
 Router.get('/student/withoutAdvisor', (req, res) => {
+  const {
+    currentUser
+  } = req.query;
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
       return
     }
     var request = new sql.Request();
-    request.query(`exec getUnallocatedStudents`, function (err, recordset) {
+    request.query(`exec getUnallocatedStudents ${currentUser}`, function (err, recordset) {
 
       if (err) {
         console.log(err)
@@ -142,7 +145,7 @@ Router.get('/student/list/:id', (req, res) => {
 
 })
 
-Router.get('/student/advisoryRequest/:id', (req, res) => {
+Router.get('/advisoryRequest/:id', (req, res) => {
   const {
     id
   } = req.params;
@@ -178,13 +181,17 @@ Router.get('/student/advisoryRequest/:id', (req, res) => {
 })
 
 Router.get('/recommendation', (req, res) => {
+  const {
+    currentUser
+  } = req.query;
+
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
       return
     }
     var request = new sql.Request();
-    request.query(`exec getRecommendations`, function (err, recordset) {
+    request.query(`exec getRecommendations '${currentUser}'`, function (err, recordset) {
 
       if (err) {
         console.log(err)
@@ -272,7 +279,7 @@ Router.get('/recommend', (req, res) => {
 
 Router.get('/accept', (req, res) => {
   const {
-    Id,
+    student,
     admin
   } = req.query;
 
@@ -282,7 +289,7 @@ Router.get('/accept', (req, res) => {
         return
       }
       var request = new sql.Request();
-      request.query(`exec setAllocation @allocated = '${Id}', @allocatedTo = '${admin}'`, function (err, recordset) {
+      request.query(`exec setAllocation @allocated = '${student}', @allocatedTo = '${admin}'`, function (err, recordset) {
         if (err) {
           console.log(err)
           res.json(false);
@@ -328,8 +335,7 @@ Router.get('/Remove', (req, res) => {
 
 Router.get('/Profs', (req, res) => {
   const {
-    Id,
-    id
+    Id
   } = req.query;
 
   var commandText = `exec dbo.getProfessors ${Id}`
@@ -357,10 +363,10 @@ Router.get('/Profs', (req, res) => {
   })
 });
 
-Router.get('/Request', (req, res) => {
+Router.get('/AdminRequest', (req, res) => {
   const {
-    Id,
-    id
+    admin,
+    student
   } = req.query;
 
   sql.connect(sqlConfig, function (err) {
@@ -369,7 +375,38 @@ Router.get('/Request', (req, res) => {
       return
     }
     var request = new sql.Request();
-    request.query(`exec createRequest @requestor ='${Id}', @requested = '${id}'`, function (err, recordset) {
+    request.query(`exec createRequest @requestor ='${admin}', @requested = '${student}'`, function (err, recordset) {
+
+      if (err) {
+        console.log(err)
+      }
+
+      const check = recordset['rowsAffected'];
+      if (check > 0) {
+        var data = recordset['recordset'];
+        res.json(true);
+      } else {
+        res.json([]);
+      }
+
+
+    });
+  })
+})
+
+Router.get('/StudentRequest', (req, res) => {
+  const {
+    admin,
+    student
+  } = req.query;
+
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+      return
+    }
+    var request = new sql.Request();
+    request.query(`exec createRequest @requestor ='${student}', @requested = '${admin}'`, function (err, recordset) {
 
       if (err) {
         console.log(err)
