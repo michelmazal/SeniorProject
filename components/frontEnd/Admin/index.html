@@ -1,58 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    <title>Home</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator_bootstrap4.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+
+  <title>Home</title>
 </head>
+
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" id="Name" href="#">(username)</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-           
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Students
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" onclick="Logout()" href="#">Logout</a>
-               
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-<br>
-      <div class="container">
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-               
-              <button class="nav-link active" onclick="Tabs('nav-home')" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Students Without Advisor</button>
-              <button class="nav-link" onclick="Tabs('nav-profile')" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List Of Your Students</button>
-              <button class="nav-link" onclick="Tabs('nav-contact')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Student Advisory Request</button>
-              <button class="nav-link" onclick="Tabs('nav-recommended')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Recommended Students</button>
-              <button class="nav-link" onclick="Tabs('nav-recommend')" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">recommended Student</button>
-            
-            </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-               
-                <table class="table">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" id="Name" href="#">(username)</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Options
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" onclick="Logout()" href="#">Logout</a>
+
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <br>
+  <div class="container">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+        <button class="nav-link active" onclick="Tabs('nav-home')" id="nav-home-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Students
+          Without Advisor</button>
+        <button class="nav-link" onclick="Tabs('nav-profile')" id="nav-profile-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List
+          Of Your Students</button>
+        <button class="nav-link" onclick="Tabs('nav-contact')" id="nav-contact-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+          aria-selected="false">Student Advisory Request</button>
+        <button class="nav-link" onclick="Tabs('nav-recommended')" id="nav-contact-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+          aria-selected="false">Recommended Students</button>
+        <button class="nav-link" onclick="Tabs('nav-recommend')" id="nav-contact-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+          aria-selected="false">recommended Student</button>
+
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <!-- <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
@@ -63,16 +83,12 @@
                       </tr>
                     </thead>
                     <tbody id="sbody">
-                    
-                     
                     </tbody>
-                  </table>
-                  
-                 
-
-            </div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <table class="table">
+                  </table> -->
+        <div id="studentTable"></div>
+      </div>
+      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <!-- <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
@@ -83,13 +99,12 @@
                       </tr>
                     </thead>
                     <tbody id="ybody">
-                    
-                     
                     </tbody>
-                  </table>
-            </div>
-            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <table class="table">
+                  </table> -->
+        <div id="yourStudents"></div>
+      </div>
+      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <!-- <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
@@ -103,11 +118,12 @@
                     
                      
                     </tbody>
-                  </table>
-            </div>
+                  </table> -->
+        <div id="advisoryRequest"></div>
+      </div>
 
-            <div class="tab-pane fade" id="nav-recommended" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <table class="table">
+      <div class="tab-pane fade" id="nav-recommended" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <!-- <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
@@ -122,270 +138,373 @@
                     
                      
                     </tbody>
-                  </table>
-            </div>
-
-            <div class="tab-pane fade" id="nav-recommend" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <form style="width: 50%;margin: 24px auto;">
-                    <br>
-                    <br>
-                    <select id="Select" class="form-control">
-                      <option selected>
-                          Select Student
-                      </option>
-                    </select>
-                    <br>
-                
-                    <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="recommendation">
-
-                    </textarea>
-                    <br>
-                    <button id="Post" class="btn btn-primary" type="button">submit</button>
-                </form>
-            </div>
-          </div>
+                  </table> -->
+        <div id="recommendedStudents"></div>
       </div>
 
+      <div class="tab-pane fade" id="nav-recommend" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <form style="width: 50%;margin: 24px auto;">
+          <br>
+          <br>
+          <select id="Select" class="form-control">
+            <option selected>
+              Select Student
+            </option>
+          </select>
+          <br>
+
+          <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="recommendation">
+
+                    </textarea>
+          <br>
+          <button id="Post" class="btn btn-primary" type="button">submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
 
 
-    
+
+
 </body>
- </html>
 
- <script>
-var Id = localStorage.getItem('Id');
-     $(document).ready(()=>{
-        var name= localStorage.getItem('Name');
+</html>
 
-        $('#Name').html(name);
-        if(name == undefined || name== ""){
-            window.location.href="/";
-        }
-     })
-     function Tabs(Tab){
-         var base=['nav-home','nav-profile','nav-contact','nav-recommended','nav-recommend'];
-         var tab = document.getElementById(Tab);
-         base.forEach(element => {
-               if(element !== Tab){
-                   document.getElementById(element).setAttribute('class','tab-pane fade');
-               }else{
-                   document.getElementById(Tab).setAttribute('class','tab-pane fade show active');
+<script>
+  var Id = localStorage.getItem('Id');
+  $(document).ready(() => {
+    var name = localStorage.getItem('Name');
 
-               }
-         });
+    $('#Name').html(name);
+    if (name == undefined || name == "") {
+      window.location.href = "/";
+    }
+  })
 
-     }
+  function Tabs(Tab) {
+    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-recommended', 'nav-recommend'];
+    var tab = document.getElementById(Tab);
+    base.forEach(element => {
+      if (element !== Tab) {
+        document.getElementById(element).setAttribute('class', 'tab-pane fade');
+      } else {
+        document.getElementById(Tab).setAttribute('class', 'tab-pane fade show active');
 
-function getStudentWithoutAdvisor(){ 
-      $.ajax({
-          type:"GET",
-          url:"/student/withoutAdvisor",
-          cache:false,
-          success:(data)=>{
-              data.forEach((element,index) => {
-                  
-                   $('#sbody').append(`
-                   <tr>
-                        <th scope="row">${index +1}</th>
-                        <td>${element.FullName}</td>
-                        <td>${element.Phone}</td>
-                        <td>${element.Email}</td>
-                        <td><button onclick="AcceptStudent(${element.NetID})" class="btn btn-primary">Accept Student</button></td>
-                      </tr>
-                   `)  
-              });
-          }
-      })
-}
+      }
+    });
 
+  }
 
-function getYourStudents(){
+  function getStudentWithoutAdvisor() {
     $.ajax({
-          type:"GET",
-          url:`/student/list/${Id}`,
-          cache:false,
-          success:(data)=>{
-            data.forEach((element,index) => {
-                  
-                  $('#ybody').append(`
-                  <tr>
-                       <th scope="row">${index +1}</th>
-                       <td>${element.FullName}</td>
-                       <td>${element.Phone}</td>
-                       <td>${element.Email}</td>
-                       <td><button onclick="Remove(${element.AllocationID})" class="btn btn-warning">Remove</button></td>
-                     </tr>
-                  `)  
-             });
-          }
-      })
-}
-
-function getYourStudentAdvisoryRequest(){
-    $.ajax({
-          type:"GET",
-          url:"/student/advisoryRequest/"+Id,
-          cache:false,
-          success:(data)=>{
-            data.forEach((element,index) => {
-                  
-                  $('#Abody').append(`
-                  <tr>
-                       <th scope="row">${index +1}</th>
-                       <td>${element.FullName}</td>
-                       <td>${element.Phone}</td>
-                       <td>${element.Email}</td>
-                       <td>
-                            <button onclick="Accepts(${element.RequestID})" class="btn btn-primary">Accept</button>
-                        </td>
-                     </tr>
-                  `)  
-             });
-          }
-      })
-}
-
-function getrecommendedTa(){
-    $.ajax({
-          type:"GET",
-          url:"/recommendation",
-          cache:false,
-          success:(data)=>{
-            data.forEach((element,index) => {
-                
-                  $('#Rbody').append(`
-                  <tr>
-                       <th scope="row">${index +1}</th>
-                       <td>${element.FullName}</td>
-                       <td>${element.Phone}</td>
-                       <td>${element.Email}</td>
-                       <td>${element.RecommendationText}</td>
-                      
-                     </tr>
-                  `)  
-             });
-          }
-      })
-}
-function getStudents(){
-    $.ajax({
-          type:"GET",
-          url:"/students",
-          cache:false,
-          success:(data)=>{
-
-            data.forEach((element,index) => {
-                  
-                  $('#Select').append(`
-                    <option value=${element.NetID}>${element.FullName}</option>
-                  `)  
-             });
-          }
-      })
-}
-
-
-$('#Post').click(()=>{
-   
-    Postrecommendation();
-   // refreshData();
-})
-function Postrecommendation(){
-   var text = $('#Recom').val(); 
-   var Select = $('#Select').val();
-   
-
-   if(text.trim() !==""){
-       if(Select !=="Select Student"){
-           var data = "&Id="+Id+"&text="+text.trim()+"&User="+Select.trim();
-           $.ajax({
-          type:"GET",
-           data:data,
-          url:"/recommend",
-          cache:false,
-          success:(data)=>{
-            console.log(data);
-              if(data == true){
-                  alert('recommended succesfully');
-              }else{
-                  alert('Failed To recommend, ' + data);
+      type: "GET",
+      url: "/student/withoutAdvisor",
+      cache: false,
+      success: (data) => {
+        var table = new Tabulator("#studentTable", {
+          layout: "fitDataStretch",
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40
+            },
+            {
+              title: "Full Name",
+              field: "FullName"
+            },
+            {
+              title: "Phone Number",
+              field: "Phone"
+            },
+            {
+              title: "Email",
+              field: "Email"
+            },
+            {
+              formatter: acceptButton,
+              width: 200,
+              hozAlign: "center",
+              cellClick: function (e, cell) {
+                AcceptStudent(cell.getRow().getData().NetID);
+                refreshData();
               }
+            }, {
+              formatter: recommendButton,
+              width: 200,
+              hozAlign: "center",
+              cellClick: function (e, cell) {
+                // AcceptStudent(cell.getRow().getData().NetID);
+                //refreshData();
+              }
+            },
+          ],
+        });
+
+      }
+    })
+  }
+  var acceptButton = function (cell, formatterParams) { //plain text value
+    return "<button class='btn btn-primary'>Accept</button>";
+  }
+  var removeButton = function (cell, formatterParams) { //plain text value
+    return "<button class='btn btn-primary'>Remove</button>";
+  }
+
+  var recommendButton = function (cell, formatterParams) { //plain text value
+    return "<button class='btn btn-primary'>Recommend</button>";
+  }
+
+  function getYourStudents() {
+    $.ajax({
+      type: "GET",
+      url: `/student/list/${Id}`,
+      cache: false,
+      success: (data) => {
+        var table = new Tabulator("#yourStudents", {
+          layout: "fitDataStretch",
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40
+            },
+            {
+              title: "Full Name",
+              field: "FullName"
+            },
+            {
+              title: "Phone Number",
+              field: "Phone"
+            },
+            {
+              title: "Email",
+              field: "Email"
+            },
+            {
+              formatter: removeButton,
+              width: 40,
+              hozAlign: "center",
+              cellClick: function (e, cell) {
+                Remove(cell.getRow().getData().NetID);
+                refreshData();
+              }
+            },
+          ],
+        });
+      }
+    })
+  }
+
+
+
+  function getYourStudentAdvisoryRequest() {
+    $.ajax({
+      type: "GET",
+      url: "/student/advisoryRequest/" + Id,
+      cache: false,
+      success: (data) => {
+        var table = new Tabulator("#advisoryRequest", {
+          layout: "fitDataStretch",
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40
+            },
+            {
+              title: "Full Name",
+              field: "FullName"
+            },
+            {
+              title: "Phone Number",
+              field: "Phone"
+            },
+            {
+              title: "Email",
+              field: "Email"
+            },
+            {
+              title: "Request Date",
+              field: "DateRequested"
+            },
+            {
+              formatter: acceptButton,
+              width: 40,
+              hozAlign: "center",
+              cellClick: function (e, cell) {
+                AcceptStudent(cell.getRow().getData().NetID);
+                refreshData();
+              }
+            },
+          ],
+        });
+      }
+    })
+  }
+
+  function getrecommendedTa() {
+    $.ajax({
+      type: "GET",
+      url: "/recommendation",
+      cache: false,
+      success: (data) => {
+        var table = new Tabulator("#recommendedStudents", {
+          layout: "fitDataStretch",
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40
+            },
+            {
+              title: "Full Name",
+              field: "FullName"
+            },
+            {
+              title: "Phone Number",
+              field: "Phone"
+            },
+            {
+              title: "Email",
+              field: "Email"
+            },
+            {
+              title: "Recommendation",
+              field: "RecommendationText"
+            }, ,
+          ],
+        });
+      }
+    })
+  }
+
+  function getStudents() {
+    $.ajax({
+      type: "GET",
+      url: "/students",
+      cache: false,
+      success: (data) => {
+
+        data.forEach((element, index) => {
+
+          $('#Select').append(`
+                    <option value=${element.NetID}>${element.FullName}</option>
+                  `)
+        });
+      }
+    })
+  }
+
+
+  $('#Post').click(() => {
+
+    Postrecommendation();
+    // refreshData();
+  })
+
+  function Postrecommendation() {
+    var text = $('#Recom').val();
+    var Select = $('#Select').val();
+
+
+    if (text.trim() !== "") {
+      if (Select !== "Select Student") {
+        var data = "&Id=" + Id + "&text=" + text.trim() + "&User=" + Select.trim();
+        $.ajax({
+          type: "GET",
+          data: data,
+          url: "/recommend",
+          cache: false,
+          success: (data) => {
+            console.log(data);
+            if (data == true) {
+              alert('recommended succesfully');
+            } else {
+              alert('Failed To recommend, ' + data);
+            }
           }
-      })
+        })
 
-       }else alert('Please Select a student');
-   }else alert("Please Provide Recommendation");
-}
+      } else alert('Please Select a student');
+    } else alert("Please Provide Recommendation");
+  }
 
-function AcceptStudent(id){
+  function AcceptStudent(id) {
+
     var studentId = id;
     var admin = Id;
 
-    var data="sId="+studentId+"&admin="+admin;
+    var data = "Id=" + studentId + "&admin=" + admin;
 
     $.ajax({
-          type:"GET",
-           data:data,
-          url:"/accept",
-          cache:false,
-          success:(data)=>{
-              if(data == true){
-                  alert('student accepted succesfully');
-              }else{
-                  alert('Process Failed');
-              }
-          }
-      })
+      type: "GET",
+      data: data,
+      url: "/accept",
+      cache: false,
+      success: (data) => {
+        if (data == true) {
+          alert('student accepted succesfully');
+        } else {
+          alert('Process Failed');
+        }
+      }
+    })
 
     //refreshData();
-}
+  }
 
 
-function Remove(id){
-    var data = "&Id="+id;
-           $.ajax({
-          type:"GET",
-           data:data,
-          url:"/Remove",
-          cache:false,
-          success:(data)=>{
-              if(data == true){
-                  alert('Removed succesfully');
-              }else{
-                  alert('Failed To Remove');
-              }
-          }
-      })
-}
+  function Remove(id) {
+    var studentId = id;
+    var admin = Id;
 
-function Accepts(id){
-    var data = "&Id="+id;
-           $.ajax({
-          type:"GET",
-           data:data,
-          url:"/Accepts",
-          cache:false,
-          success:(data)=>{
-              if(data == true){
-                  alert('accepted succesfully');
-              }else{
-                  alert('Failed To Accept');
-              }
-          }
-      })
-}
+    var data = "Id=" + studentId + "&admin=" + admin;
+    $.ajax({
+      type: "GET",
+      data: data,
+      url: "/Remove",
+      cache: false,
+      success: (data) => {
+        if (data == true) {
+          alert('Removed succesfully');
+        } else {
+          alert('Failed To Remove');
+        }
+      }
+    })
+  }
 
-function Logout(){
+  function Accepts(id) {
+    var data = "&Id=" + id;
+    $.ajax({
+      type: "GET",
+      data: data,
+      url: "/Accepts",
+      cache: false,
+      success: (data) => {
+        if (data == true) {
+          alert('accepted succesfully');
+        } else {
+          alert('Failed To Accept');
+        }
+      }
+    })
+  }
+
+  function Logout() {
     localStorage.clear();
-    window.location.href="/";
-}
+    window.location.href = "/";
+  }
 
+  function refreshData() {
+    getStudentWithoutAdvisor();
+    getYourStudents();
+    getrecommendedTa();
+    getStudents();
+    getYourStudentAdvisoryRequest();
+  }
 
-getStudentWithoutAdvisor();
-getYourStudents();
-getrecommendedTa();
-getStudents();
-getYourStudentAdvisoryRequest();
-
- </script>
+  refreshData()
+</script>

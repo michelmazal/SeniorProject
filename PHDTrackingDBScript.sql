@@ -46,10 +46,7 @@ CREATE TABLE dbo.Request (
 RequestID int not null Identity(1,1) Primary Key,
 RequestorID nvarchar(10) not null,
 RequestedID nvarchar(10) not null,
-DateRequested datetime null,
-DateSent datetime null,
-Approved bit not null default 0,
-ApprovedDate datetime null
+DateRequested date null,
 FOREIGN KEY(RequestorID) REFERENCES [USER](NetID),
 FOREIGN KEY(RequestedID) REFERENCES [USER](NetID),
 )
