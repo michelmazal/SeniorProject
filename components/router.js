@@ -55,7 +55,7 @@ Router.get('/adminLogin', (req, res) => {
       } else {
         res.json({
           res: 'user not found'
-        });
+        }); 
       }
 
 

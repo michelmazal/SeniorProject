@@ -31,3 +31,15 @@ values
 '469-123-1234',
 'DEF123456@utdallas.edu'
 )
+
+Insert into [User] 
+values 
+(
+'GHI123456',
+2,
+'John',
+'Mar',
+'John Mar',
+'469-123-1234',
+'GHI123456@utdallas.edu'
+)
