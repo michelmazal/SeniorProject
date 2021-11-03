@@ -103,9 +103,9 @@
 
   }
 
-  function getProfs() {
+  async function getProfs() {
     var data = "Id=" + Id;
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/Profs",
       cache: false,
@@ -133,7 +133,6 @@
             },
             {
               formatter: function (cell, formatterParams) {
-                console.log(cell.getRow().getData())
                 if (cell.getRow().getData().IsRequestDisabled === 1) {
                   return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
                     "ed</button>";
@@ -161,9 +160,9 @@
     })
   }
 
-  function getAdminAdvisoryRequest() {
+  async function getAdminAdvisoryRequest() {
     var data = "Id=" + Id;
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/advisoryRequest/" + Id,
       cache: false,
@@ -229,16 +228,16 @@
     hideScroller()
   }
 
-  function Request(id) {
+  async function Request(id) {
     var data = "admin=" + id + "&student=" + Id;
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/StudentRequest",
       cache: false,
       data: data,
       success: (data) => {
         if (data == true) {
-          alert('Request Submited Succesfully');
+          //alert('Request Submited Succesfully');
         } else {
           alert('Request Failed');
         }

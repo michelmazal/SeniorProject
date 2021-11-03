@@ -5,10 +5,7 @@ function Logout() {
 }
 
 async function AcceptAllocation(studentId, adminId) {
-
-console.log("here");
   var data = "student=" + studentId + "&admin=" + adminId;
-  console.log(data);
   await $.ajax({
     type: "GET",
     data: data,

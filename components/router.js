@@ -372,7 +372,7 @@ Router.get('/AdminRequest', (req, res) => {
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
-      return
+      res.json(false);
     }
     var request = new sql.Request();
     request.query(`exec createRequest @requestor ='${admin}', @requested = '${student}'`, function (err, recordset) {
@@ -381,13 +381,7 @@ Router.get('/AdminRequest', (req, res) => {
         console.log(err)
       }
 
-      const check = recordset['rowsAffected'];
-      if (check > 0) {
-        var data = recordset['recordset'];
         res.json(true);
-      } else {
-        res.json([]);
-      }
 
 
     });
@@ -403,6 +397,7 @@ Router.get('/StudentRequest', (req, res) => {
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
+      res.json(false);
       return
     }
     var request = new sql.Request();
@@ -411,16 +406,7 @@ Router.get('/StudentRequest', (req, res) => {
       if (err) {
         console.log(err)
       }
-
-      const check = recordset['rowsAffected'];
-      if (check > 0) {
-        var data = recordset['recordset'];
         res.json(true);
-      } else {
-        res.json([]);
-      }
-
-
     });
   })
 })

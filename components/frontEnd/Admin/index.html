@@ -140,7 +140,7 @@
 
   async function getStudentWithoutAdvisor() {
     var data = "currentUser=" + Id
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/student/withoutAdvisor",
       cache: false,
@@ -213,7 +213,7 @@
   }
 
   async function getYourStudents() {
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: `/student/list/${Id}`,
       cache: false,
@@ -261,7 +261,7 @@
 
 
   async function getYourStudentAdvisoryRequest() {
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/advisoryRequest/" + Id,
       cache: false,
@@ -310,9 +310,9 @@
     })
   }
 
-  function getrecommendedTa() {
+  async function getrecommendedTa() {
     var data = "currentUser=" + Id
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/recommendation",
       cache: false,
@@ -371,8 +371,8 @@
     })
   }
 
-  function getStudents() {
-    $.ajax({
+  async function getStudents() {
+    await $.ajax({
       type: "GET",
       url: "/students",
       cache: false,
@@ -469,9 +469,9 @@
     })
   }
 
-  function Request(id) {
+  async function Request(id) {
     var data = "admin=" + Id + "&student=" + id;
-    $.ajax({
+    await $.ajax({
       type: "GET",
       url: "/AdminRequest",
       cache: false,

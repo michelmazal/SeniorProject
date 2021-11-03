@@ -1,7 +1,7 @@
 USE [PHDTracking]
 GO
 
-/****** Object:  StoredProcedure [dbo].[createRequest]    Script Date: 11/2/2021 6:56:03 PM ******/
+/****** Object:  StoredProcedure [dbo].[createRequest]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,15 +10,30 @@ GO
 
 
 CREATE procedure [dbo].[createRequest]
-@requestor varchar(max),
+ @requestor varchar(max) ,
 @requested varchar(max)
 AS
+
+if exists(select * from Request where RequestorID = @requested and RequestedID = @requestor)
+BEGIN
+if exists(select * from [User] where roleid = 1 and netid = @requestor)
+BEGIN
+exec setAllocation @requested, @requestor
+END
+else
+Begin
+exec setAllocation @requestor , @requested
+END
+end 
+else
+begin
 Insert into Request
 Values
 (@requestor, @requested, getdate())
+end
 GO
 
-/****** Object:  StoredProcedure [dbo].[getAdvisoryRequest]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getAdvisoryRequest]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -34,7 +49,7 @@ INNER JOIN [User] ON [User].NetID=Request.RequestorID
 WHERE RequestedID= @requestedID
 GO
 
-/****** Object:  StoredProcedure [dbo].[getProfessors]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getProfessors]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -61,7 +76,7 @@ WHERE RoleID = 1
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[getRecommendations]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getRecommendations]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -84,7 +99,7 @@ and RequestorID = @currentUserID
 where a.AllocationID is null
 GO
 
-/****** Object:  StoredProcedure [dbo].[getStudents]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getStudents]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -98,7 +113,7 @@ SELECT * FROM [User]
 WHERE [User].RoleID=2
 GO
 
-/****** Object:  StoredProcedure [dbo].[getStudentsAllocated]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getStudentsAllocated]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -115,7 +130,7 @@ ON [User].[NetID]=Allocation.AllocatedID
 WHERE AllocatedToID = @allocatedToID
 GO
 
-/****** Object:  StoredProcedure [dbo].[getUnallocatedStudents]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[getUnallocatedStudents]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -142,7 +157,7 @@ and a.AllocationID is null
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[giveRecommendation]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[giveRecommendation]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -171,7 +186,7 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[removeAllocation]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[removeAllocation]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -188,7 +203,7 @@ where AllocatedID = @allocatedID
 and AllocatedToID = @allocatedTo
 GO
 
-/****** Object:  StoredProcedure [dbo].[setAllocation]    Script Date: 11/2/2021 6:56:04 PM ******/
+/****** Object:  StoredProcedure [dbo].[setAllocation]    Script Date: 11/2/2021 7:35:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
