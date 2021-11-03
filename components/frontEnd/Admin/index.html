@@ -494,14 +494,14 @@
     $("#loader").hide();
   }
 
-  function refreshData() {
-    getStudentWithoutAdvisor();
-    getYourStudents();
-    getrecommendedTa();
-    getStudents();
-    getYourStudentAdvisoryRequest();
+  async function refreshData() {
+    await getStudentWithoutAdvisor();
+    await getYourStudents();
+    await getrecommendedTa();
+    await getStudents();
+    await getYourStudentAdvisoryRequest();
   }
 
-  refreshData()
+  refreshData() 
   hideScroller()
 </script>

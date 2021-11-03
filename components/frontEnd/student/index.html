@@ -149,7 +149,7 @@
               headerSort: false,
               hozAlign: "center",
               cellClick: async function (e, cell) {
-                if (cell.getRow().getData().IsRequestDisabled === 1)
+                if (cell.getRow().getData().IsRequestDisabled === 1 || cell.getRow().getData().IsAdvisor === 1)
                   return;
                 await functionRouter('Request', cell.getRow().getData().NetID);
               }
@@ -252,11 +252,12 @@
     $("#loader").hide();
   }
 
-  function refreshData() {
-    getProfs()
-    getAdminAdvisoryRequest()
+  async function refreshData() {
+    await getProfs()
+    await getAdminAdvisoryRequest()
   }
 
-  hideScroller()
+
   refreshData() 
+  hideScroller()
 </script>
