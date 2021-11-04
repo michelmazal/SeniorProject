@@ -36,7 +36,8 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
             Options
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -145,23 +146,28 @@
       success: (data) => {
         var table = new Tabulator("#studentTable", {
           layout: "fitDataFill",
+          
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
-              width: 40
+              width: 40,
+              resizable:false,
             },
             {
               title: "Full Name",
-              field: "FullName"
+              field: "FullName",
+              resizable:false,
             },
             {
               title: "Phone Number",
-              field: "Phone"
+              field: "Phone",
+              resizable:false,
             },
             {
               title: "Email",
-              field: "Email"
+              field: "Email",
+              resizable:false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -177,6 +183,7 @@
               },
               width: 150,
               headerSort: false,
+              resizable:false,
               hozAlign: "center",
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRequestDisabled === 1)
@@ -196,6 +203,7 @@
               },
               width: 150,
               headerSort: false,
+              resizable:false,
               hozAlign: "center",
               cellClick: async function (e, cell) {
                 // AcceptStudent(cell.getRow().getData().NetID);
@@ -217,23 +225,28 @@
       success: (data) => {
         var table = new Tabulator("#yourStudents", {
           layout: "fitDataFill",
+          
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
-              width: 40
+              width: 40,
+              resizable:false,
             },
             {
               title: "Full Name",
-              field: "FullName"
+              field: "FullName",
+              resizable:false,
             },
             {
               title: "Phone Number",
-              field: "Phone"
+              field: "Phone",
+              resizable:false,
             },
             {
               title: "Email",
-              field: "Email"
+              field: "Email",
+              resizable:false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -245,6 +258,7 @@
               width: 150,
               headerSort: false,
               hozAlign: "center",
+              resizable:false,
               cellClick: async function (e, cell) {
                 await functionRouter('Remove', cell.getRow().getData().NetID);
               }
@@ -265,27 +279,33 @@
       success: (data) => {
         var table = new Tabulator("#advisoryRequest", {
           layout: "fitDataFill",
+          
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
-              width: 40
+              width: 40,
+              resizable:false,
             },
             {
               title: "Full Name",
-              field: "FullName"
+              field: "FullName",
+              resizable:false,
             },
             {
               title: "Phone Number",
-              field: "Phone"
+              field: "Phone",
+              resizable:false,
             },
             {
               title: "Email",
-              field: "Email"
+              field: "Email",
+              resizable:false,
             },
             {
               title: "Request Date",
-              field: "DateRequested"
+              field: "DateRequested",
+              resizable:false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -297,6 +317,7 @@
               width: 150,
               hozAlign: "center",
               headerSort: false,
+              resizable:false,
               cellClick: async function (e, cell) {
                 await functionRouter('Accept', cell.getRow().getData().NetID);
               }
@@ -317,30 +338,37 @@
       success: (data) => {
         var table = new Tabulator("#recommendedStudents", {
           layout: "fitDataFill",
+          
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
-              width: 40
+              width: 40,
+              resizable:false,
             },
             {
               title: "Full Name",
-              field: "FullName"
+              field: "FullName",
+              resizable:false,
             },
             {
               title: "Phone Number",
-              field: "Phone"
+              field: "Phone",
+              resizable:false,
             },
             {
               title: "Email",
-              field: "Email"
+              field: "Email",
+              resizable:false,
             },
             {
               title: "Recommendation",
-              field: "RecommendationText"
+              field: "RecommendationText",
+              resizable:false,
             }, {
               title: "Recommended By",
-              field: "RecommendedBy"
+              field: "RecommendedBy",
+              resizable:false,
             }, {
               formatter: function (cell, formatterParams) {
                 if (cell.getRow().getData().IsRequestDisabled === 1) {
@@ -356,6 +384,7 @@
               width: 150,
               headerSort: false,
               hozAlign: "center",
+              resizable:false,
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRequestDisabled === 1)
                   return;
@@ -426,7 +455,7 @@
         await AcceptAllocation(netID, Id);
         break;
       case 'Remove':
-        await Remove(netID);
+        await Remove(netID,Id);
         break;
       case 'Request':
         await Request(netID);
@@ -443,28 +472,6 @@
     hideScroller()
   }
 
-
-
-
-  async function Remove(id) {
-    var studentId = id;
-    var admin = Id;
-
-    var data = "Id=" + studentId + "&admin=" + admin;
-    await $.ajax({
-      type: "GET",
-      data: data,
-      url: "/Remove",
-      cache: false,
-      success: (data) => {
-        if (data == true) {
-          //alert('Removed succesfully');
-        } else {
-          alert('Failed To Remove');
-        }
-      }
-    })
-  }
 
   async function Request(id) {
     var data = "admin=" + Id + "&student=" + id;

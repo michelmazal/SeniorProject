@@ -20,5 +20,22 @@ async function AcceptAllocation(studentId, adminId) {
     }
   })
 
-  //refreshData();
+}
+
+async function Remove(student, admin) {
+
+  var data = "Id=" + student + "&admin=" + admin;
+  await $.ajax({
+    type: "GET",
+    data: data,
+    url: "/Remove",
+    cache: false,
+    success: (data) => {
+      if (data == true) {
+        //alert('Removed succesfully');
+      } else {
+        alert('Failed To Remove');
+      }
+    }
+  })
 }
