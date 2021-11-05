@@ -64,9 +64,9 @@
         <button class="nav-link" onclick="Tabs('nav-recommended')" id="nav-recommended-tab" data-bs-toggle="tab"
           data-bs-target="#nav-recommended" type="button" role="tab" aria-controls="nav-recommended"
           aria-selected="false">Recommended Students</button>
-        <button class="nav-link" onclick="Tabs('nav-recommend')" id="nav-recommend-tab" data-bs-toggle="tab"
-          data-bs-target="#nav-recommend" type="button" role="tab" aria-controls="nav-recommend"
-          aria-selected="false">recommended Student</button>
+        <button class="nav-link" onclick="Tabs('nav-myrecommend')" id="nav-myrecommend-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-myrecommend" type="button" role="tab" aria-controls="nav-myrecommend"
+          aria-selected="false">My Recommendations</button>
 
       </div>
     </nav>
@@ -89,19 +89,21 @@
         <form style="width: 50%;margin: 24px auto;">
           <br>
           <br>
-          <select id="Select" class="form-control">
-            <option selected>
-              Select Student
-            </option>
-          </select>
+          <input id="studentNetID" style="display: none;">
+          <bold id="studentName">Student: test</bold>
           <br>
-
-          <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="recommendation">
+          <br>
+          <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="Recommendation Text">
 
                     </textarea>
           <br>
-          <button id="Post" class="btn btn-primary" type="button">submit</button>
+          <button id="Post" class="btn btn-primary" type="button">Submit</button>
+          <button id="Cancel" class="btn btn-primary" type="button">Cancel</button>
         </form>
+      </div>
+
+      <div class="tab-pane fade" id="nav-myrecommend" role="tabpanel" aria-labelledby="nav-myrecommend-tab">
+        <div id="myrecommendation"></div>
       </div>
     </div>
   </div>
@@ -122,8 +124,10 @@
     }
   })
 
+  var tabToReturn = ''
+
   function Tabs(Tab) {
-    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-recommended', 'nav-recommend'];
+    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-recommended', 'nav-recommend', 'nav-myrecommend'];
     var tab = document.getElementById(Tab);
     base.forEach(element => {
       if (element !== Tab) {
@@ -146,28 +150,28 @@
       success: (data) => {
         var table = new Tabulator("#studentTable", {
           layout: "fitDataFill",
-          
+
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
               width: 40,
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Full Name",
               field: "FullName",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Phone Number",
               field: "Phone",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Email",
               field: "Email",
-              resizable:false,
+              resizable: false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -183,7 +187,7 @@
               },
               width: 150,
               headerSort: false,
-              resizable:false,
+              resizable: false,
               hozAlign: "center",
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRequestDisabled === 1)
@@ -203,11 +207,17 @@
               },
               width: 150,
               headerSort: false,
-              resizable:false,
+              resizable: false,
               hozAlign: "center",
               cellClick: async function (e, cell) {
-                // AcceptStudent(cell.getRow().getData().NetID);
-                //refreshData();
+                if (cell.getRow().getData().IsRecommendationDisabled === 1)
+                  return;
+
+                $("#studentName").text("Student: " + cell.getRow().getData().FullName)
+                $("#studentNetID").val(cell.getRow().getData().NetID)
+                $("#Recom").val("")
+                Tabs('nav-recommend');
+                tabToReturn = 'nav-home';
               }
             },
           ],
@@ -225,28 +235,28 @@
       success: (data) => {
         var table = new Tabulator("#yourStudents", {
           layout: "fitDataFill",
-          
+
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
               width: 40,
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Full Name",
               field: "FullName",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Phone Number",
               field: "Phone",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Email",
               field: "Email",
-              resizable:false,
+              resizable: false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -258,11 +268,36 @@
               width: 150,
               headerSort: false,
               hozAlign: "center",
-              resizable:false,
+              resizable: false,
               cellClick: async function (e, cell) {
                 await functionRouter('Remove', cell.getRow().getData().NetID);
               }
-            },
+            }, {
+              formatter: function (cell, formatterParams) {
+                if (cell.getRow().getData().IsRecommendationDisabled === 1) {
+                  return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
+                    "ed</button>";
+                } else
+                  return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
+              },
+              formatterParams: {
+                buttonText: 'Recommend'
+              },
+              width: 150,
+              headerSort: false,
+              resizable: false,
+              hozAlign: "center",
+              cellClick: async function (e, cell) {
+                if (cell.getRow().getData().IsRecommendationDisabled === 1)
+                  return;
+
+                $("#studentName").text("Student: " + cell.getRow().getData().FullName)
+                $("#studentNetID").val(cell.getRow().getData().NetID)
+                $("#Recom").val("")
+                Tabs('nav-recommend');
+                tabToReturn = 'nav-profile';
+              }
+            }
           ],
         });
       }
@@ -279,33 +314,33 @@
       success: (data) => {
         var table = new Tabulator("#advisoryRequest", {
           layout: "fitDataFill",
-          
+
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
               width: 40,
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Full Name",
               field: "FullName",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Phone Number",
               field: "Phone",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Email",
               field: "Email",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Request Date",
               field: "DateRequested",
-              resizable:false,
+              resizable: false,
             },
             {
               formatter: function (cell, formatterParams) {
@@ -317,7 +352,7 @@
               width: 150,
               hozAlign: "center",
               headerSort: false,
-              resizable:false,
+              resizable: false,
               cellClick: async function (e, cell) {
                 await functionRouter('Accept', cell.getRow().getData().NetID);
               }
@@ -338,37 +373,37 @@
       success: (data) => {
         var table = new Tabulator("#recommendedStudents", {
           layout: "fitDataFill",
-          
+
           data: data,
           columns: [{
               formatter: "rownum",
               hozAlign: "center",
               width: 40,
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Full Name",
               field: "FullName",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Phone Number",
               field: "Phone",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Email",
               field: "Email",
-              resizable:false,
+              resizable: false,
             },
             {
               title: "Recommendation",
               field: "RecommendationText",
-              resizable:false,
+              resizable: false,
             }, {
               title: "Recommended By",
               field: "RecommendedBy",
-              resizable:false,
+              resizable: false,
             }, {
               formatter: function (cell, formatterParams) {
                 if (cell.getRow().getData().IsRequestDisabled === 1) {
@@ -384,7 +419,7 @@
               width: 150,
               headerSort: false,
               hozAlign: "center",
-              resizable:false,
+              resizable: false,
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRequestDisabled === 1)
                   return;
@@ -397,81 +432,107 @@
     })
   }
 
-  async function getStudents() {
+  async function getMyRecommendations() {
+    var data = "currentUser=" + Id
     await $.ajax({
       type: "GET",
-      url: "/students",
+      url: "/myrecommendation",
       cache: false,
+      data: data,
       success: (data) => {
+        var table = new Tabulator("#myrecommendation", {
+          layout: "fitDataFill",
 
-        data.forEach((element, index) => {
-
-          $('#Select').append(`
-                    <option value=${element.NetID}>${element.FullName}</option>
-                  `)
+          data: data,
+          columns: [{
+              formatter: "rownum",
+              hozAlign: "center",
+              width: 40,
+              resizable: false,
+            },
+            {
+              title: "Full Name",
+              field: "FullName",
+              resizable: false,
+            },
+            {
+              title: "Phone Number",
+              field: "Phone",
+              resizable: false,
+            },
+            {
+              title: "Email",
+              field: "Email",
+              resizable: false,
+            },
+            {
+              title: "Recommendation",
+              field: "RecommendationText",
+              resizable: false,
+            }, {
+              formatter: function (cell, formatterParams) {
+                return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
+              },
+              formatterParams: {
+                buttonText: 'Remove'
+              },
+              width: 150,
+              headerSort: false,
+              hozAlign: "center",
+              resizable: false,
+              cellClick: async function (e, cell) {
+                await functionRouter('Remove Recommendation', cell.getRow().getData().NetID);
+              }
+            },
+          ],
         });
       }
     })
   }
 
+  // async function getStudents() {
+  //   await $.ajax({
+  //     type: "GET",
+  //     url: "/students",
+  //     cache: false,
+  //     success: (data) => {
 
-  $('#Post').click(() => {
+  //       data.forEach((element, index) => {
 
-    Postrecommendation();
-    // refreshData();
+  //         $('#Select').append(`
+  //                   <option value=${element.NetID}>${element.FullName}</option>
+  //                 `)
+  //       });
+  //     }
+  //   })
+  // }
+
+
+  $('#Post').click(async () => {
+    await functionRouter("Submit Recommendation", $('#studentNetID').val())
   })
 
-  function Postrecommendation() {
-    var text = $('#Recom').val();
-    var Select = $('#Select').val();
+  $('#Cancel').click(async () => {
+    Tabs('nav-home')
+  })
 
+  async function Postrecommendation(studentID, text) {
 
-    if (text.trim() !== "") {
-      if (Select !== "Select Student") {
-        var data = "&Id=" + Id + "&text=" + text.trim() + "&User=" + Select.trim();
-        $.ajax({
-          type: "GET",
-          data: data,
-          url: "/recommend",
-          cache: false,
-          success: (data) => {
-            console.log(data);
-            if (data == true) {
-              //alert('recommended succesfully');
-            } else {
-              alert('Failed To recommend, ' + data);
-            }
-          }
-        })
-
-      } else alert('Please Select a student');
-    } else alert("Please Provide Recommendation");
+    var data = "&Id=" + Id + "&text=" + text.trim() + "&User=" + studentID;
+    await $.ajax({
+      type: "GET",
+      data: data,
+      url: "/recommend",
+      cache: false,
+      success: (data) => {
+        if (data == true) {
+          //alert('recommended succesfully');
+        } else {
+          alert('Failed To recommend, ' + data);
+        }
+      }
+    })
   }
-
-  async function functionRouter(action, netID) {
-    showScroller()
-    switch (action) {
-      case 'Accept':
-        await AcceptAllocation(netID, Id);
-        break;
-      case 'Remove':
-        await Remove(netID,Id);
-        break;
-      case 'Request':
-        await Request(netID);
-        break;
-      case 'Recommend':
-        //Need to tie this together to open recommendation page and then handle that
-        break;
-      default:
-        console.log("Not Mapped Yet " + action)
-
-
-    }
-    await refreshData();
-    hideScroller()
-  }
-
 
   async function Request(id) {
     var data = "admin=" + Id + "&student=" + id;
@@ -490,6 +551,64 @@
     })
   }
 
+
+  async function RemoveRecommendation(student, admin) {
+
+    var data = "Id=" + student + "&admin=" + admin;
+    await $.ajax({
+      type: "GET",
+      data: data,
+      url: "/RemoveRecommendation",
+      cache: false,
+      success: (data) => {
+        if (data == true) {
+          //alert('Removed succesfully');
+        } else {
+          alert('Failed To Remove');
+        }
+      }
+    })
+  }
+
+  async function functionRouter(action, netID) {
+    showScroller()
+    switch (action) {
+      case 'Accept':
+        if (confirm("Are you sure you want to Accept Request from" + netID)) {
+          await AcceptAllocation(netID, Id);
+        }
+        break;
+      case 'Remove':
+        if (confirm("Are you sure you want to remove " + netID)) {
+          await Remove(netID, Id);
+        }
+        break;
+      case 'Request':
+        await Request(netID);
+        break;
+      case 'Submit Recommendation':
+        var text = $('#Recom').val();
+
+        if (text.trim() !== "") {
+          await Postrecommendation(netID, text)
+          Tabs(tabToReturn);
+        } else {
+          alert("Please Provide Recommendation");
+          break;
+        }
+        break;
+      case 'Remove Recommendation':
+        if (confirm("Are you sure you want to remove recommendation for " + netID)) {
+          await RemoveRecommendation(netID, Id);
+        }
+        break;
+      default:
+        console.log("Not Mapped Yet " + action)
+    }
+    await refreshData();
+    hideScroller()
+  }
+
   function showScroller() {
     $("#loader").show();
   }
@@ -502,8 +621,8 @@
     await getStudentWithoutAdvisor();
     await getYourStudents();
     await getrecommendedTa();
-    await getStudents();
     await getYourStudentAdvisoryRequest();
+    await getMyRecommendations()
   }
 
   refreshData()

@@ -126,7 +126,7 @@ Router.get('/student/list/:id', (req, res) => {
       return;
     }
     var request = new sql.Request();
-    request.query(`dbo.getStudentsAllocated @allocatedToID = ${id}`, function (err, recordset) {
+    request.query(`dbo.getMyStudents @allocatedToID = ${id}`, function (err, recordset) {
 
       if (err) {
         console.log(err)
@@ -195,9 +195,36 @@ Router.get('/recommendation', (req, res) => {
 
       if (err) {
         console.log(err)
-        //reject(err);
+      }
+
+      const check = recordset['rowsAffected'];
+      if (check > 0) {
+        var data = recordset['recordset'];
+        res.json(data);
+      } else {
+        res.json([]);
+      }
 
 
+    });
+  })
+})
+
+Router.get('/myrecommendation', (req, res) => {
+  const {
+    currentUser
+  } = req.query;
+
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+      return
+    }
+    var request = new sql.Request();
+    request.query(`exec getmyRecommendations '${currentUser}'`, function (err, recordset) {
+
+      if (err) {
+        console.log(err)
       }
 
       const check = recordset['rowsAffected'];
@@ -248,7 +275,6 @@ Router.get('/recommend', (req, res) => {
     text,
     User
   } = req.query;
-  console.log(text);
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
@@ -266,8 +292,7 @@ Router.get('/recommend', (req, res) => {
 
       const check = recordset['rowsAffected'];
       if (check > 0) {
-        var data = recordset['recordset'];
-        res.json(data);
+        res.json(true);
       } else {
         res.json([]);
       }
@@ -312,6 +337,39 @@ Router.get('/Remove', (req, res) => {
     }
     var request = new sql.Request();
     request.query(`exec removeAllocation @allocatedID = '${Id}', @allocatedTo = '${admin}'`,
+      function (err, recordset) {
+
+        if (err) {
+          console.log(err)
+        }
+
+        const check = recordset['rowsAffected'];
+        if (check > 0) {
+
+          var data = recordset['recordset'];
+          res.json(true);
+        } else {
+          res.json(false);
+        }
+
+
+      });
+  })
+
+})
+
+Router.get('/RemoveRecommendation', (req, res) => {
+  const {
+    Id,
+    admin
+  } = req.query;
+
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+    }
+    var request = new sql.Request();
+    request.query(`exec removeRecommendation @recommended = '${Id}', @recommender = '${admin}'`,
       function (err, recordset) {
 
         if (err) {
