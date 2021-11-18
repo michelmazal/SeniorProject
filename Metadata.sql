@@ -3,8 +3,13 @@ values
 ('Admin')
 Insert into UserRoleMember
 values
-('Student')
-
+('RA')
+Insert into UserRoleMember
+values
+('TA')
+Insert into UserRoleMember
+values
+('Director')
 
 --Test Data
 
@@ -24,7 +29,7 @@ Insert into [User]
 values 
 (
 'JKL123456',
-1,
+2,
 'Test',
 'User',
 'Test User',
@@ -36,7 +41,7 @@ Insert into [User]
 values 
 (
 'DEF123456',
-2,
+3,
 'Jane',
 'Doe',
 'Jane Doe',
@@ -48,7 +53,7 @@ Insert into [User]
 values 
 (
 'GHI123456',
-2,
+4,
 'John',
 'Mar',
 'John Mar',

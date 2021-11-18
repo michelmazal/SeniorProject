@@ -55,7 +55,7 @@ Router.get('/adminLogin', (req, res) => {
       } else {
         res.json({
           res: 'user not found'
-        }); 
+        });
       }
 
 
@@ -75,13 +75,38 @@ Router.get('/admin', (req, res) => {
 
 })
 
-Router.get('/student', (req, res) => {
-  if (currentRole !== 'Student') {
+Router.get('/RA', (req, res) => {
+  if (currentRole !== 'RA') {
     res.json({
       res: 'user does not have access'
     });
   } else {
-    res.sendFile(path.join(__dirname, `${Paths}/student/index.html`));
+    res.sendFile(path.join(__dirname, `${Paths}/RA/index.html`));
+  }
+
+})
+
+Router.get('/TA', (req, res) => {
+  if (currentRole !== 'TA') {
+    res.json({
+      res: 'user does not have access'
+    });
+  } else {
+    res.json({
+      res: 'No UI built for TAs'
+    });
+    // res.sendFile(path.join(__dirname, `${Paths}/TA/index.html`));
+  }
+
+})
+
+Router.get('/Director', (req, res) => {
+  if (currentRole !== 'Director') {
+    res.json({
+      res: 'user does not have access'
+    });
+  } else {
+    res.sendFile(path.join(__dirname, `${Paths}/Director/index.html`));
   }
 
 })
@@ -181,9 +206,6 @@ Router.get('/advisoryRequest/:id', (req, res) => {
 })
 
 Router.get('/recommendation', (req, res) => {
-  const {
-    currentUser
-  } = req.query;
 
   sql.connect(sqlConfig, function (err) {
     if (err) {
@@ -191,7 +213,7 @@ Router.get('/recommendation', (req, res) => {
       return
     }
     var request = new sql.Request();
-    request.query(`exec getRecommendations '${currentUser}'`, function (err, recordset) {
+    request.query(`exec getRecommendations`, function (err, recordset) {
 
       if (err) {
         console.log(err)
@@ -244,16 +266,19 @@ Router.get('/myrecommendation', (req, res) => {
 })
 
 Router.get('/students', (req, res) => {
+  const {
+    toGet
+  } = req.query;
   sql.connect(sqlConfig, function (err) {
     if (err) {
       console.log(err);
       return
     }
     var request = new sql.Request();
-    request.query(`exec getStudents`, function (err, recordset) {
+    request.query(`exec getStudents @roleToGet = '${toGet}'`, function (err, recordset) {
 
       if (err) {
-        console.log(err)
+        console.log(err);
       }
 
       const check = recordset['rowsAffected'];
@@ -272,8 +297,11 @@ Router.get('/students', (req, res) => {
 Router.get('/recommend', (req, res) => {
   const {
     Id,
-    text,
-    User
+    netID,
+    firstName,
+    lastName,
+    phone,
+    email
   } = req.query;
   sql.connect(sqlConfig, function (err) {
     if (err) {
@@ -281,8 +309,11 @@ Router.get('/recommend', (req, res) => {
       return
     }
     var request = new sql.Request();
-    request.query(`exec giveRecommendation @requestor = '${Id}', @requested = '${User}',
-          @text = '${text}'`, function (err, recordset) {
+    request.query(`exec giveRecommendation @requestor = '${Id}', @netID = '${netID}',
+          @firstName = '${firstName}',
+          @lastName = '${lastName}',
+          @phone = '${phone}',
+          @email = '${email}'`, function (err, recordset) {
 
       if (err) {
         console.log(err)
@@ -308,21 +339,43 @@ Router.get('/accept', (req, res) => {
     admin
   } = req.query;
 
-    sql.connect(sqlConfig, function (err) {
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+      return
+    }
+    var request = new sql.Request();
+    request.query(`exec setAllocation @allocated = '${student}', @allocatedTo = '${admin}'`, function (err, recordset) {
       if (err) {
-        console.log(err);
-        return
+        console.log(err)
+        res.json(false);
       }
-      var request = new sql.Request();
-      request.query(`exec setAllocation @allocated = '${student}', @allocatedTo = '${admin}'`, function (err, recordset) {
-        if (err) {
-          console.log(err)
-          res.json(false);
-        }
-          res.json(true);
+      res.json(true);
 
-      });
-    })
+    });
+  })
+})
+
+Router.get('/acceptRecommendation', (req, res) => {
+  
+  const {
+    student
+  } = req.query;
+
+  sql.connect(sqlConfig, function (err) {
+    if (err) {
+      console.log(err);
+      return
+    }
+    var request = new sql.Request();
+    request.query(`exec acceptRecommendation @studentID = '${student}'`, function (err, recordset) {
+      if (err) {
+        res.json(false);
+      }
+      res.json(true);
+
+    });
+  })
 })
 
 Router.get('/Remove', (req, res) => {
@@ -439,7 +492,7 @@ Router.get('/AdminRequest', (req, res) => {
         console.log(err)
       }
 
-        res.json(true);
+      res.json(true);
 
 
     });
@@ -464,7 +517,7 @@ Router.get('/StudentRequest', (req, res) => {
       if (err) {
         console.log(err)
       }
-        res.json(true);
+      res.json(true);
     });
   })
 })

@@ -54,19 +54,19 @@
 
         <button class="nav-link active" onclick="Tabs('nav-home')" id="nav-home-tab" data-bs-toggle="tab"
           data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Students
-          Without Advisor</button>
+          Without Research Advisor</button>
         <button class="nav-link" onclick="Tabs('nav-profile')" id="nav-profile-tab" data-bs-toggle="tab"
-          data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">List
-          Of Your Students</button>
+          data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Your
+          Research Assistants</button>
         <button class="nav-link" onclick="Tabs('nav-contact')" id="nav-contact-tab" data-bs-toggle="tab"
           data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
           aria-selected="false">Student Advisory Request</button>
-        <button class="nav-link" onclick="Tabs('nav-recommended')" id="nav-recommended-tab" data-bs-toggle="tab"
-          data-bs-target="#nav-recommended" type="button" role="tab" aria-controls="nav-recommended"
-          aria-selected="false">Recommended Students</button>
-        <button class="nav-link" onclick="Tabs('nav-myrecommend')" id="nav-myrecommend-tab" data-bs-toggle="tab"
+        <!-- <button class="nav-link" onclick="Tabs('nav-myrecommend')" id="nav-myrecommend-tab" data-bs-toggle="tab"
           data-bs-target="#nav-myrecommend" type="button" role="tab" aria-controls="nav-myrecommend"
-          aria-selected="false">My Recommendations</button>
+          aria-selected="false">My Recommendations</button> -->
+        <button class="nav-link" onclick="Tabs('nav-recommend')" id="nav-recommend-tab" data-bs-toggle="tab"
+          data-bs-target="#nav-recommend" type="button" role="tab" aria-controls="nav-recommend"
+          aria-selected="false">Recommend Student</button>
 
       </div>
     </nav>
@@ -81,30 +81,38 @@
         <div id="advisoryRequest"></div>
       </div>
 
-      <div class="tab-pane fade" id="nav-recommended" role="tabpanel" aria-labelledby="nav-contact-tab">
-        <div id="recommendedStudents"></div>
-      </div>
-
       <div class="tab-pane fade" id="nav-recommend" role="tabpanel" aria-labelledby="nav-profile-tab">
         <form style="width: 50%;margin: 24px auto;">
-          <br>
-          <br>
-          <input id="studentNetID" style="display: none;">
-          <bold id="studentName">Student: test</bold>
-          <br>
-          <br>
-          <textarea id="Recom" sstyle="height: 200px;" class="form-control" placeholder="Recommendation Text">
-
-                    </textarea>
+          <div class="form-group">
+            <label for="netID">NetID</label>
+            <input type="netID" class="form-control" id="netID" aria-describedby="netID" placeholder="Enter NetID">
+          </div>
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input class="form-control" id="firstName" aria-describedby="firstName" placeholder="Enter First Name">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input class="form-control" id="lastName" aria-describedby="lastName" placeholder="Enter Last Name">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="phone" class="form-control" id="phone" aria-describedby="phone"
+              placeholder="Enter Phone Number">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Enter Email">
+          </div>
           <br>
           <button id="Post" class="btn btn-primary" type="button">Submit</button>
           <button id="Cancel" class="btn btn-primary" type="button">Cancel</button>
         </form>
       </div>
 
-      <div class="tab-pane fade" id="nav-myrecommend" role="tabpanel" aria-labelledby="nav-myrecommend-tab">
+      <!-- <div class="tab-pane fade" id="nav-myrecommend" role="tabpanel" aria-labelledby="nav-myrecommend-tab">
         <div id="myrecommendation"></div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="loader" id="loader"></div>
@@ -127,17 +135,20 @@
   var tabToReturn = ''
 
   function Tabs(Tab) {
-    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-recommended', 'nav-recommend', 'nav-myrecommend'];
+
+    var base = ['nav-home', 'nav-profile', 'nav-contact', 'nav-recommend'];
     var tab = document.getElementById(Tab);
     base.forEach(element => {
       if (element !== Tab) {
         document.getElementById(element).setAttribute('class', 'tab-pane fade');
+        document.getElementById(element + '-tab').setAttribute('class', 'nav-link');
       } else {
         document.getElementById(Tab).setAttribute('class', 'tab-pane fade show active');
+        document.getElementById(Tab + '-tab').setAttribute('class', 'nav-link active');
 
       }
     });
-
+    $('form').get(0).reset()
   }
 
   async function getStudentWithoutAdvisor() {
@@ -197,15 +208,14 @@
             }, {
               formatter: function (cell, formatterParams) {
                 if (cell.getRow().getData().IsRecommendationDisabled === 1) {
-                  return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
-                    "ed</button>";
+                  return "<button class='btn btn-primary' disabled>Recommended for TA</button>";
                 } else
                   return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
               },
               formatterParams: {
-                buttonText: 'Recommend'
+                buttonText: 'Recommend for TA'
               },
-              width: 150,
+              width: 200,
               headerSort: false,
               resizable: false,
               hozAlign: "center",
@@ -213,9 +223,11 @@
                 if (cell.getRow().getData().IsRecommendationDisabled === 1)
                   return;
 
-                $("#studentName").text("Student: " + cell.getRow().getData().FullName)
-                $("#studentNetID").val(cell.getRow().getData().NetID)
-                $("#Recom").val("")
+                $('#netID').attr('value', cell.getRow().getData().NetID)
+                $("#firstName").attr('value', cell.getRow().getData().FirstName)
+                $("#lastName").attr('value', cell.getRow().getData().LastName)
+                $("#phone").attr('value', cell.getRow().getData().Phone)
+                $("#email").attr('value', cell.getRow().getData().Email)
                 Tabs('nav-recommend');
                 tabToReturn = 'nav-home';
               }
@@ -275,15 +287,14 @@
             }, {
               formatter: function (cell, formatterParams) {
                 if (cell.getRow().getData().IsRecommendationDisabled === 1) {
-                  return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
-                    "ed</button>";
+                  return "<button class='btn btn-primary' disabled>Recommended for TA</button>";
                 } else
                   return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
               },
               formatterParams: {
-                buttonText: 'Recommend'
+                buttonText: 'Recommend for TA'
               },
-              width: 150,
+              width: 200,
               headerSort: false,
               resizable: false,
               hozAlign: "center",
@@ -291,9 +302,11 @@
                 if (cell.getRow().getData().IsRecommendationDisabled === 1)
                   return;
 
-                $("#studentName").text("Student: " + cell.getRow().getData().FullName)
-                $("#studentNetID").val(cell.getRow().getData().NetID)
-                $("#Recom").val("")
+                  $('#netID').attr('value', cell.getRow().getData().NetID)
+                $("#firstName").attr('value', cell.getRow().getData().FirstName)
+                $("#lastName").attr('value', cell.getRow().getData().LastName)
+                $("#phone").attr('value', cell.getRow().getData().Phone)
+                $("#email").attr('value', cell.getRow().getData().Email)
                 Tabs('nav-recommend');
                 tabToReturn = 'nav-profile';
               }
@@ -363,75 +376,6 @@
     })
   }
 
-  async function getrecommendedTa() {
-    var data = "currentUser=" + Id
-    await $.ajax({
-      type: "GET",
-      url: "/recommendation",
-      cache: false,
-      data: data,
-      success: (data) => {
-        var table = new Tabulator("#recommendedStudents", {
-          layout: "fitDataFill",
-
-          data: data,
-          columns: [{
-              formatter: "rownum",
-              hozAlign: "center",
-              width: 40,
-              resizable: false,
-            },
-            {
-              title: "Full Name",
-              field: "FullName",
-              resizable: false,
-            },
-            {
-              title: "Phone Number",
-              field: "Phone",
-              resizable: false,
-            },
-            {
-              title: "Email",
-              field: "Email",
-              resizable: false,
-            },
-            {
-              title: "Recommendation",
-              field: "RecommendationText",
-              resizable: false,
-            }, {
-              title: "Recommended By",
-              field: "RecommendedBy",
-              resizable: false,
-            }, {
-              formatter: function (cell, formatterParams) {
-                if (cell.getRow().getData().IsRequestDisabled === 1) {
-                  return "<button class='btn btn-primary' disabled>" + formatterParams.buttonText +
-                    "ed</button>";
-                } else
-                  return "<button class='btn btn-primary'>" + formatterParams.buttonText + "</button>";
-                // return `<button class='btn btn-primary' onclick="await functionRouter('Request','` + cell.getRow().getData().NetID + `')">` + formatterParams.buttonText + "</button>";
-              },
-              formatterParams: {
-                buttonText: 'Request'
-              },
-              width: 150,
-              headerSort: false,
-              hozAlign: "center",
-              resizable: false,
-              cellClick: async function (e, cell) {
-                if (cell.getRow().getData().IsRequestDisabled === 1)
-                  return;
-                await functionRouter('Request', cell.getRow().getData().NetID);
-              }
-            },
-          ],
-        });
-      }
-    })
-  }
-
   async function getMyRecommendations() {
     var data = "currentUser=" + Id
     await $.ajax({
@@ -490,23 +434,6 @@
     })
   }
 
-  // async function getStudents() {
-  //   await $.ajax({
-  //     type: "GET",
-  //     url: "/students",
-  //     cache: false,
-  //     success: (data) => {
-
-  //       data.forEach((element, index) => {
-
-  //         $('#Select').append(`
-  //                   <option value=${element.NetID}>${element.FullName}</option>
-  //                 `)
-  //       });
-  //     }
-  //   })
-  // }
-
 
   $('#Post').click(async () => {
     await functionRouter("Submit Recommendation", $('#studentNetID').val())
@@ -516,9 +443,10 @@
     Tabs('nav-home')
   })
 
-  async function Postrecommendation(studentID, text) {
+  async function Postrecommendation(netID, firstName, lastName, phone, email) {
 
-    var data = "&Id=" + Id + "&text=" + text.trim() + "&User=" + studentID;
+    var data = "&Id=" + Id + "&netID=" + netID + "&firstName=" + firstName + "&lastName=" + lastName + "&phone=" +
+      phone + "&email=" + email;
     await $.ajax({
       type: "GET",
       data: data,
@@ -526,7 +454,7 @@
       cache: false,
       success: (data) => {
         if (data == true) {
-          //alert('recommended succesfully');
+          alert('recommended succesfully');
         } else {
           alert('Failed To recommend, ' + data);
         }
@@ -587,13 +515,17 @@
         await Request(netID);
         break;
       case 'Submit Recommendation':
-        var text = $('#Recom').val();
+        var _netID = $('#netID').val().trim();
+        var firstName = $('#firstName').val().trim();
+        var lastName = $('#lastName').val().trim();
+        var phone = $('#phone').val().trim();
+        var email = $('#email').val().trim();
 
-        if (text.trim() !== "") {
-          await Postrecommendation(netID, text)
-          Tabs(tabToReturn);
+        if (_netID !== "" && firstName !== "" && lastName.trim() !== "" && phone.trim() !== "" && email !== "") {
+          await Postrecommendation(_netID, firstName, lastName, phone, email)
+          Tabs('nav-home');
         } else {
-          alert("Please Provide Recommendation");
+          alert("Please fill out all fields");
           break;
         }
         break;
@@ -620,9 +552,9 @@
   async function refreshData() {
     await getStudentWithoutAdvisor();
     await getYourStudents();
-    await getrecommendedTa();
+    // await getrecommendedTa();
     await getYourStudentAdvisoryRequest();
-    await getMyRecommendations()
+    // await getMyRecommendations()
   }
 
   refreshData()
