@@ -148,7 +148,11 @@
 
       }
     });
-    $('form').get(0).reset()
+    $('#netID').attr('value', '')
+    $("#firstName").attr('value', '')
+    $("#lastName").attr('value', '')
+    $("#phone").attr('value', '')
+    $("#email").attr('value', '')
   }
 
   async function getStudentWithoutAdvisor() {
@@ -222,13 +226,13 @@
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRecommendationDisabled === 1)
                   return;
-
+                Tabs('nav-recommend');
                 $('#netID').attr('value', cell.getRow().getData().NetID)
                 $("#firstName").attr('value', cell.getRow().getData().FirstName)
                 $("#lastName").attr('value', cell.getRow().getData().LastName)
                 $("#phone").attr('value', cell.getRow().getData().Phone)
                 $("#email").attr('value', cell.getRow().getData().Email)
-                Tabs('nav-recommend');
+
                 tabToReturn = 'nav-home';
               }
             },
@@ -301,13 +305,13 @@
               cellClick: async function (e, cell) {
                 if (cell.getRow().getData().IsRecommendationDisabled === 1)
                   return;
-
-                  $('#netID').attr('value', cell.getRow().getData().NetID)
+                Tabs('nav-recommend');
+                $('#netID').attr('value', cell.getRow().getData().NetID)
                 $("#firstName").attr('value', cell.getRow().getData().FirstName)
                 $("#lastName").attr('value', cell.getRow().getData().LastName)
                 $("#phone").attr('value', cell.getRow().getData().Phone)
                 $("#email").attr('value', cell.getRow().getData().Email)
-                Tabs('nav-recommend');
+
                 tabToReturn = 'nav-profile';
               }
             }
@@ -436,7 +440,7 @@
 
 
   $('#Post').click(async () => {
-    await functionRouter("Submit Recommendation", $('#studentNetID').val())
+    await functionRouter("Submit Recommendation", $('#netID').val())
   })
 
   $('#Cancel').click(async () => {
