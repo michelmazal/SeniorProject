@@ -60,6 +60,7 @@ RecommenderID nvarchar(10) not null,
 	[Phone] [nvarchar](max) NOT NULL,
 	[Email] [nvarchar](max) NOT NULL,
 	[DateRecommended] [datetime] NOT NULL,
+	[isApproved] [bit] NOT NULL default 0,
 )
 
 

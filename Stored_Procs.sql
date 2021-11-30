@@ -1,7 +1,7 @@
 USE [PHDTracking]
 GO
 
-/****** Object:  StoredProcedure [dbo].[acceptRecommendation]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[acceptRecommendation]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,10 +10,12 @@ GO
 
 
 CREATE procedure [dbo].[acceptRecommendation] 
-@studentID varchar(10)
+@studentID varchar(10),
+@isAccepeted bit
 AS
+if(@isAccepeted = 1)
+BEGIN
 Insert into [User]
-
 select 
 RecommendedID,
 3,
@@ -25,11 +27,17 @@ Email
 from Recommendation
 where RecommendedID = @studentID
 
+update Recommendation set isApproved = 1
+where RecommendedID = @studentID
+END
+else 
+BEGIN
 delete from Recommendation
 where RecommendedID = @studentID
+END
 GO
 
-/****** Object:  StoredProcedure [dbo].[createRequest]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[createRequest]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -61,7 +69,7 @@ Values
 end
 GO
 
-/****** Object:  StoredProcedure [dbo].[getAdvisoryRequest]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getAdvisoryRequest]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -78,7 +86,7 @@ WHERE RequestedID= @requestedID
 and [User].RoleID = 2
 GO
 
-/****** Object:  StoredProcedure [dbo].[getMyRecommendations]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getMyRecommendations]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -94,7 +102,7 @@ INNER JOIN [User] student ON student.NetID=Recommendation.RecommendedID
 where  recommendation.RecommenderID = @currentUserID
 GO
 
-/****** Object:  StoredProcedure [dbo].[getMyStudents]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getMyStudents]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -115,7 +123,7 @@ WHERE AllocatedToID = @allocatedToID
 and [user].RoleID = 2
 GO
 
-/****** Object:  StoredProcedure [dbo].[getProfessors]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getProfessors]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -161,7 +169,7 @@ WHERE RoleID = 1
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[getRecommendations]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getRecommendations]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -174,9 +182,10 @@ AS
 select r.*, recommender.FullName as Recommended_By from Recommendation r
 left join [User] recommender
 on recommender.NetID = recommenderID
+where r.isApproved = 0
 GO
 
-/****** Object:  StoredProcedure [dbo].[getStudents]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getStudents]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -192,7 +201,7 @@ WHERE
 ([User].RoleID=2 and @roleToGet = 'RA') or ([User].RoleID=3 and @roleToGet = 'TA')
 GO
 
-/****** Object:  StoredProcedure [dbo].[getUnallocatedStudents]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[getUnallocatedStudents]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -205,21 +214,21 @@ CREATE procedure [dbo].[getUnallocatedStudents]
 AS
 Select distinct [User].*, 
 case when RequestID is null then 0 else 1 end as IsRequestDisabled,
-case when RecommendationID is null then 0 else 1 end as IsRecommendationDisabled from [User] 
+case when TA.NetID is null then 0 else 1 end as IsRecommendationDisabled from [User] 
 left join Allocation a 
 on a.AllocatedID = [User].NetID
 left join Request
 on NetID = RequestedID
 and RequestorID = @currentUserID
-left join Recommendation 
-on RecommendedID = NetID
-and RecommenderID = @currentUserID
-WHERE RoleID = 2
+left join [User] TA 
+on TA.NetID = [User].NetID
+and TA.RoleID = 3
+WHERE [User].RoleID = 2
 and a.AllocationID is null
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[giveRecommendation]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[giveRecommendation]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -240,7 +249,7 @@ and RecommendedID = @netID)
 BEGIN
 Insert into Recommendation 
 values 
-(@requestor, @netID, @firstName,@lastName,@phone,@email, getdate())
+(@requestor, @netID, @firstName,@lastName,@phone,@email, getdate(),0)
 END
 ELSE
 BEGIN
@@ -251,7 +260,7 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[removeAllocation]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[removeAllocation]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -268,7 +277,7 @@ where AllocatedID = @allocatedID
 and AllocatedToID = @allocatedTo
 GO
 
-/****** Object:  StoredProcedure [dbo].[removeRecommendation]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[removeRecommendation]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -285,7 +294,7 @@ where RecommenderID = @recommender
 and RecommendedID = @recommended
 GO
 
-/****** Object:  StoredProcedure [dbo].[setAllocation]    Script Date: 11/18/2021 8:40:55 AM ******/
+/****** Object:  StoredProcedure [dbo].[setAllocation]    Script Date: 11/30/2021 5:46:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
