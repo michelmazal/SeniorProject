@@ -337,6 +337,21 @@
               cellClick: async function (e, cell) {
                 await functionRouter('Accept', cell.getRow().getData().RecommendedID);
               }
+            },
+            {
+              formatter: function (cell, formatterParams) {
+                return `<button class='btn btn-primary'>` + formatterParams.buttonText + "</button>";
+              },
+              formatterParams: {
+                buttonText: 'Reject'
+              },
+              width: 150,
+              hozAlign: "center",
+              headerSort: false,
+              resizable: false,
+              cellClick: async function (e, cell) {
+                await functionRouter('Reject', cell.getRow().getData().RecommendedID);
+              }
             }
           ],
         });
@@ -347,7 +362,10 @@
     showScroller()
     switch (action) {
       case 'Accept':
-        await AcceptRecommendation(netID);
+        await AcceptRecommendation(netID,'1');
+        break;
+      case 'Reject':
+        await AcceptRecommendation(netID,'0');
         break;
       case 'Remove':
         await Remove(Id, netID);
@@ -361,8 +379,8 @@
     hideScroller()
   }
 
-  async function AcceptRecommendation(studentId) {
-  var data = "student=" + studentId;
+  async function AcceptRecommendation(studentId,isApproved) {
+  var data = "student=" + studentId + "&isApproved=" + isApproved;
   await $.ajax({
     type: "GET",
     data: data,
@@ -370,7 +388,7 @@
     cache: false,
     success: (data) => {
       if (data == true) {
-        alert('student accepted succesfully');
+        alert('Process succeeded');
       } else {
         alert('Process Failed');
       }

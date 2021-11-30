@@ -357,9 +357,10 @@ Router.get('/accept', (req, res) => {
 })
 
 Router.get('/acceptRecommendation', (req, res) => {
-  
+
   const {
-    student
+    student,
+    isApproved
   } = req.query;
 
   sql.connect(sqlConfig, function (err) {
@@ -368,9 +369,10 @@ Router.get('/acceptRecommendation', (req, res) => {
       return
     }
     var request = new sql.Request();
-    request.query(`exec acceptRecommendation @studentID = '${student}'`, function (err, recordset) {
+    request.query(`exec acceptRecommendation @studentID = '${student}', @isAccepeted = '${isApproved}'`, function (err, recordset) {
       if (err) {
         res.json(false);
+        return;
       }
       res.json(true);
 
@@ -491,10 +493,7 @@ Router.get('/AdminRequest', (req, res) => {
       if (err) {
         console.log(err)
       }
-
       res.json(true);
-
-
     });
   })
 })
